@@ -23,7 +23,7 @@ class DienMayXanh extends SiteAbstract
     public function isValidUrl(string $url): bool
     {
         return preg_match("/^https:\/\/www\.dienmayxanh\.com\/khuyen\-mai/", $url) ||
-            preg_match("/^https:\/\/www\.dienmayxanh\.com\/khuyenmai\/\?p=[0-9]+/", $url);;
+            preg_match("/^https:\/\/www\.dienmayxanh\.com\/khuyen\-mai\/\?p=[0-9]+/", $url);;
     }
 
     public function canBeStored(string $url): bool
