@@ -19,7 +19,7 @@ class CrawlerService
 
         $this->init(
             $site,
-            $siteConfig->startUrls()
+            $siteConfig->startPoints()
         );
 
         while ($this->urlService->hasPendingRecords($site)) {
@@ -55,10 +55,10 @@ class CrawlerService
         };
     }
 
-    public function init(string $site, array $startUrls)
+    public function init(string $site, array $startPoints)
     {
         logger()->info("Saving Start Point...:", [$site]);
-        foreach ($startUrls as $url) {
+        foreach ($startPoints as $url) {
             if (!$this->urlService->checkExist($url, $site)) {
                 $this->urlService->save($url, $site);
                 logger()->info("Saved:", [$url]);

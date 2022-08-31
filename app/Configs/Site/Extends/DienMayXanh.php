@@ -7,16 +7,12 @@ use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class DienMayXanh extends SiteAbstract
 {
-    public function __construct()
-    {
-    }
-
     public function rootUrl(): string
     {
         return 'https://www.dienmayxanh.com';
     }
 
-    public function startUrls(): array
+    public function startPoints(): array
     {
         return ["https://www.dienmayxanh.com/khuyen-mai"];
     }
@@ -44,7 +40,7 @@ class DienMayXanh extends SiteAbstract
         return $url;
     }
 
-    public function getData(DomCrawler $crawler)
+    public function getData(DomCrawler $crawler): array
     {
         $data = [];
 
