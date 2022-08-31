@@ -2,6 +2,8 @@
 
 namespace App\Configs\Site;
 
+use App\Configs\Site\Extends\DienMayXanh;
+
 class SiteMapping
 {
     public static array $sites = [

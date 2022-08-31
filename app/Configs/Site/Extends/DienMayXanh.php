@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Configs\Site;
+namespace App\Configs\Site\Extends;
 
+use App\Configs\Site\SiteAbstract;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class DienMayXanh extends SiteAbstract
