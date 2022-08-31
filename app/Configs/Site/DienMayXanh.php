@@ -22,15 +22,28 @@ class DienMayXanh extends SiteAbstract
 
     public function isValidUrl(string $url): bool
     {
-        return preg_match("/https:\/\/www\.dienmayxanh\.com\/khuyen\-mai/", $url);
+        return preg_match("/^https:\/\/www\.dienmayxanh\.com\/khuyen\-mai/", $url) ||
+            preg_match("/^https:\/\/www\.dienmayxanh\.com\/khuyenmai\/\?p=[0-9]+/", $url);;
     }
 
     public function canBeStored(string $url): bool
     {
-        return preg_match("/https:\/\/www\.dienmayxanh\.com\/khuyen\-mai\/[a-zA-Z0-9]+/", $url);
+        return preg_match("/^https:\/\/www\.dienmayxanh\.com\/khuyen\-mai\/[a-zA-Z0-9]+/", $url);
     }
 
-    public function getData(DomCrawler $crawler, string $url)
+    public function formatUrl(string $url): string
+    {
+        if (preg_match("/^\?p=[0-9]+/", $url)) {
+            return  "https://www.dienmayxanh.com/khuyen-mai/" . $url;
+        }
+        if (preg_match("/^\/[0-9A-Za-z&\?_\.-]+/", $url)) {
+            return  "https://www.dienmayxanh.com" . $url;
+        }
+
+        return $url;
+    }
+
+    public function getData(DomCrawler $crawler)
     {
         $data = [];
 

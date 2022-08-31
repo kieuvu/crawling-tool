@@ -11,5 +11,5 @@ interface SiteInterface
     public function isValidUrl(string $url): bool;
     public function canBeStored(string $url): bool;
     public function formatUrl(string $url): string;
-    public function getData(DomCrawler $crawler, string $url);
+    public function getData(DomCrawler $crawler);
 }
