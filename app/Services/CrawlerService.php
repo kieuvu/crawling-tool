@@ -34,7 +34,7 @@ class CrawlerService
                     $domCrawler = new DomCrawler($html);
 
                     $domCrawler->filter('a')->each(function (DomCrawler $node, $i) use ($siteConfig, $site) {
-                        $retrivedUrl = $siteConfig->formatUrl($node->attr('href'));
+                        $retrivedUrl = $siteConfig->formatUrl($node->attr('href') ?: "");
                         if (!$this->urlService->checkExist($retrivedUrl, $site)) {
                             $this->urlService->save($retrivedUrl, $site);
                             logger()->info("Saved:", [$retrivedUrl]);
