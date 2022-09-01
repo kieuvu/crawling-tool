@@ -27,27 +27,28 @@ class CrawlerService
             $pendingRecordUrl = $pendingRecord->url;
 
             try {
-                if ($siteConfig->isValidUrl($pendingRecordUrl)) {
-                    logger()->info("Current Target:", [$pendingRecordUrl]);
+                logger()->info("Current Target:", [$pendingRecordUrl]);
 
-                    $html       = file_get_contents($pendingRecordUrl);
-                    $domCrawler = new DomCrawler($html);
+                $html       = file_get_contents($pendingRecordUrl);
+                $domCrawler = new DomCrawler($html);
 
-                    $domCrawler->filter('a')->each(function (DomCrawler $node, $i) use ($siteConfig, $site) {
-                        $retrivedUrl = $siteConfig->formatUrl($node->attr('href') ?: "");
+                if ($siteConfig->canBeStored($pendingRecordUrl)) {
+                    $data = $siteConfig->getData($domCrawler);
+                    $this->urlService->updateData($pendingRecord, $data);
+                    logger()->info("Has data:", [$pendingRecordUrl, $data]);
+                }
+
+                $domCrawler->filter('a')->each(function (DomCrawler $node, $i) use ($siteConfig, $site) {
+                    $retrivedUrl = $siteConfig->formatUrl($node->attr('href') ?: "");
+                    if ($siteConfig->isValidUrl($retrivedUrl)) {
                         if (!$this->urlService->checkExist($retrivedUrl, $site)) {
                             $this->urlService->save($retrivedUrl, $site);
                             logger()->info("Saved:", [$retrivedUrl]);
                         }
                         return true;
-                    });
-
-                    if ($siteConfig->canBeStored($pendingRecordUrl)) {
-                        $data = $siteConfig->getData($domCrawler);
-                        $this->urlService->updateData($pendingRecord, $data);
-                        logger()->info("Has data:", [$pendingRecordUrl, $data]);
                     }
-                }
+                    return false;
+                });
             } catch (\Exception) {
             }
 
