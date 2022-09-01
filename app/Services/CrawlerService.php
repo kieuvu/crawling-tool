@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Configs\Site\SiteInterface;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
+use Spatie\Browsershot\Browsershot;
 
 class CrawlerService
 {
@@ -29,7 +30,8 @@ class CrawlerService
             try {
                 logger()->info("Current Target:", [$pendingRecordUrl]);
 
-                $html       = file_get_contents($pendingRecordUrl);
+                $html = Browsershot::url($pendingRecordUrl)->bodyHtml();
+
                 $domCrawler = new DomCrawler($html);
 
                 if ($siteConfig->canBeStored($pendingRecordUrl)) {
@@ -49,7 +51,8 @@ class CrawlerService
                     }
                     return false;
                 });
-            } catch (\Exception) {
+            } catch (\Exception $ex) {
+                logger()->error($ex->getMessage());
             }
 
             $this->urlService->updateStatus($pendingRecord, 1);
