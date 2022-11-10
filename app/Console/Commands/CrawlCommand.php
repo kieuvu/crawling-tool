@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Services\CrawlerService;
 use App\Configs\Site\SiteMapping;
+use App\Services\Browser\BrowserShot;
 
 class CrawlCommand extends Command
 {
@@ -36,6 +37,6 @@ class CrawlCommand extends Command
     {
         $site = $this->option('site');
 
-        $this->crawler->run(SiteMapping::getSiteConfig($site));
+        $this->crawler->run(SiteMapping::getSiteConfig($site), new BrowserShot());
     }
 }

@@ -3,16 +3,17 @@
 namespace App\Services;
 
 use App\Configs\Site\SiteInterface;
+use App\Services\Browser\BrowserInterface;
+use App\Services\Browser\BrowserShot;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
-use Spatie\Browsershot\Browsershot;
 
 class CrawlerService
 {
-    public function __construct(public UrlService $urlService)
+    public function __construct(private UrlService $urlService)
     {
     }
 
-    public function run(SiteInterface $siteConfig)
+    public function run(SiteInterface $siteConfig, BrowserInterface $browser)
     {
         $site = $siteConfig->rootUrl();
 
@@ -30,7 +31,7 @@ class CrawlerService
             try {
                 logger()->info("Current Target:", [$pendingRecordUrl]);
 
-                $html = Browsershot::url($pendingRecordUrl)->bodyHtml();
+                $html = $browser->setSite($pendingRecordUrl)->getSiteContent();
 
                 $domCrawler = new DomCrawler($html);
 
