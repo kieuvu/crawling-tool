@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Configs\Site\SiteInterface;
 use App\Libs\Browser\BrowserInterface;
-use App\Libs\Console\EchoCli;
+use App\Libs\Console\BeautyEcho;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class CrawlerService
@@ -19,8 +19,7 @@ class CrawlerService
     {
         $site = $siteConfig->rootUrl();
 
-        logger()->info("Crawling...:", [$site]);
-        EchoCli::Info("Crawling", $site);
+        pinfo("Crawling", $site);
 
         $this->init(
             $site,
@@ -32,18 +31,18 @@ class CrawlerService
             $pendingRecordUrl = $pendingRecord->url;
 
             try {
-                logger()->info("Current Target:", [$pendingRecordUrl]);
-                EchoCli::Info("Current Target", $pendingRecordUrl);
+                pinfo("Current Target", $pendingRecordUrl);
 
-                $html = $this->browser->setSite($pendingRecordUrl)->getSiteContent();
+                $html = $this->browser
+                    ->setSite($pendingRecordUrl)
+                    ->getSiteContent();
 
                 $domCrawler = new DomCrawler($html);
 
                 if ($siteConfig->canBeStored($pendingRecordUrl)) {
                     $data = $siteConfig->getData($domCrawler);
                     $this->urlService->updateData($pendingRecord, $data);
-                    logger()->info("Has data:", [$pendingRecordUrl, $data]);
-                    EchoCli::Info("Has data", $data['title']);
+                    pinfo("Has data", $data['title']);
                 }
 
                 $domCrawler->filter('a')->each(function (DomCrawler $node, $i) use ($siteConfig, $site) {
@@ -51,8 +50,7 @@ class CrawlerService
                     if ($siteConfig->isValidUrl($retrivedUrl)) {
                         if (!$this->urlService->checkExist($retrivedUrl, $site)) {
                             $this->urlService->save($retrivedUrl, $site);
-                            logger()->info("Saved:", [$retrivedUrl]);
-                            EchoCli::Info("Saved", $retrivedUrl);
+                            pinfo("Saved", $retrivedUrl);
                         }
                         return true;
                     }
@@ -63,7 +61,7 @@ class CrawlerService
             }
 
             $this->urlService->updateStatus($pendingRecord, 1);
-            EchoCli::Dash();
+            pdash();
         };
     }
 
@@ -75,16 +73,13 @@ class CrawlerService
 
     public function init(string $site, array $startPoints)
     {
-        logger()->info("Saving Start Point...:", [$site]);
-        EchoCli::Info("Saving Start Point", $site);
+        pinfo("Saving Start Point", $site);
         foreach ($startPoints as $url) {
             if (!$this->urlService->checkExist($url, $site)) {
                 $this->urlService->save($url, $site);
-                logger()->info("Saved:", [$url]);
-                EchoCli::Info("Saved", $url);
+                pinfo("Saved", $url);
             } else {
-                logger()->info("Existed:", [$url]);
-                EchoCli::Info("Existed", $url);
+                pinfo("Existed", $url);
             }
         }
     }

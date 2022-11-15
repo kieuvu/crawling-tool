@@ -2,21 +2,19 @@
 
 namespace App\Libs\Console;
 
-use App\Libs\String\ReduceString;
-
-class EchoCli
+class BeautyEcho
 {
     public static $terminalWidth = 1;
     public static $dash = "";
 
-    public static function Info($label, $message)
+    public static function info($label, $message)
     {
         echo "「\033[36m$label\033[0m」$message\n";
     }
 
-    public static function Dash()
+    public static function dash($length, $char = "_")
     {
-        $terminalWidth = intval(exec('tput cols'));
+        $terminalWidth =  $length;
         $dash = "";
 
         if (self::$terminalWidth == $terminalWidth) {
@@ -27,7 +25,7 @@ class EchoCli
         self::$terminalWidth = $terminalWidth;
 
         for ($i = 1; $i <= $terminalWidth; $i++) {
-            $dash = $dash . "_";
+            $dash = $dash . $char;
         }
 
         self::$dash = $dash;
