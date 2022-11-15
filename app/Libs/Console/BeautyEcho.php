@@ -12,7 +12,7 @@ class BeautyEcho
         echo "「\033[36m$label\033[0m」$message\n";
     }
 
-    public static function dash($length, $char = "_")
+    public static function dash($length = 50, $char = "_")
     {
         $terminalWidth =  $length;
         $dash = "";
