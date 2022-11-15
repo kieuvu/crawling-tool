@@ -30,6 +30,8 @@ class DienMayXanh extends SiteAbstract
 
     public function formatUrl(string $url): string
     {
+        $url = withoutUrlQueries($url, ['view']);
+
         if (preg_match("/^\?p=[0-9]+/", $url)) {
             return  "https://www.dienmayxanh.com/khuyen-mai/" . $url;
         }
