@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Browser;
+namespace App\Libs\Browser;
 
 abstract class BrowserAbstract implements BrowserInterface
 {

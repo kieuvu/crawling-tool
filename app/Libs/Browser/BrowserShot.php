@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Browser;
+namespace App\Libs\Browser;
 
 use Spatie\Browsershot\Browsershot as BS;
 
