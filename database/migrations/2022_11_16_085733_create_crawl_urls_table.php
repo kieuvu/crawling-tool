@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('crawl_urls', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('site');
-            $table->foreign('site')->references('id')->on('sites');
+            $table->foreign('site')->references('id')->on('sites')->onDelete('cascade');
             $table->text('url');
             $table->string('url_hash')->index();
             $table->json('data')->nullable();

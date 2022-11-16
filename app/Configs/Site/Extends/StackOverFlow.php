@@ -19,9 +19,16 @@ class StackOverFlow extends SiteAbstract
         ];
     }
 
+    public function formatUrl(string $url): string
+    {
+        $url = onlyUrlQueries($url, ['p', 'page', 'tab', 'pagesize']);
+        return $url;
+    }
+
     public function isValidUrl(string $url): bool
     {
         return
+            !preg_match("/^https:\/\/stackoverflow\.com\/q\/[0-9]+$/", $url) &&
             preg_match("/^https:\/\/stackoverflow\.com/", $url) &&
             !preg_match("/^https:\/\/stackoverflow\.com\/users\//", $url);
     }
