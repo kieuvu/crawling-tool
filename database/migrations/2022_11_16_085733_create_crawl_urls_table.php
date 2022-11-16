@@ -14,8 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('crawl_urls', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('site')->index();
+            $table->id();
+            $table->unsignedBigInteger('site');
+            $table->foreign('site')->references('id')->on('sites');
             $table->text('url');
             $table->string('url_hash')->index();
             $table->json('data')->nullable();
