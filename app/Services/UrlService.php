@@ -3,54 +3,55 @@
 namespace App\Services;
 
 use App\Models\CrawlUrl;
+use App\Models\Site;
 
 class UrlService
 {
-    public function __construct(public CrawlUrl $crawlUrl)
+    public function __construct(private SiteService $siteService)
     {
     }
 
-    public function checkExist(string $url, string $site): bool
+    public function checkExist(string $url, Site $site): bool
     {
-        return $this->crawlUrl
-            ->where('site', $site)
+        return CrawlUrl::where('site', $site->id)
             ->where('url_hash', [md5($url)])
             ->exists();
     }
 
-    public function hasPendingRecords($site): bool
+    public function hasPendingRecords(Site $site): bool
     {
-        return $this->crawlUrl
-            ->where('site', $site)
+        return CrawlUrl::where('site', $site->id)
             ->where('visited', -1)
             ->exists();
     }
 
-    public function getPendingRecord($site): CrawlUrl
+    public function getPendingRecord(Site $site): CrawlUrl
     {
-        return $this->crawlUrl
-            ->where('site', $site)
+        return CrawlUrl::where('site', $site->id)
             ->where('visited', -1)
             ->first();
     }
 
-    public function save(string $url, string  $site): CrawlUrl
+    public function save(string $url, Site $site): CrawlUrl
     {
-        return $this->crawlUrl->create([
-            'site'     => $site,
+        $this->siteService->updateUrlCount($site);
+        return CrawlUrl::create([
+            'site'     => $site->id,
             'url'      => $url,
             'url_hash' => md5($url),
         ]);
     }
 
-    public function updateData(CrawlUrl $record, $data): bool
+    public function updateData(CrawlUrl $record, $data, Site $site): bool
     {
+        $this->siteService->updateDataCount($site);
         $record->data = json_encode($data);
         return $record->save();
     }
 
-    public function updateStatus(CrawlUrl $record, int $status)
+    public function updateStatus(CrawlUrl $record, int $status, Site $site)
     {
+        $this->siteService->updatedCrawledCount($site);
         $record->visited = $status;
         return $record->save();
     }

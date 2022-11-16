@@ -4,27 +4,34 @@ namespace App\Services;
 
 use App\Configs\Site\SiteInterface;
 use App\Libs\Browser\BrowserInterface;
-use App\Libs\Console\BeautyEcho;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class CrawlerService
 {
     private BrowserInterface $browser;
 
-    public function __construct(private UrlService $urlService)
-    {
+    public function __construct(
+        private UrlService $urlService,
+        private SiteService $siteService
+    ) {
     }
 
     public function run(SiteInterface $siteConfig)
     {
-        $site = $siteConfig->rootUrl();
+        $site =  $this->siteService->saveSite($siteConfig->rootUrl());
 
-        pinfo("Crawling", $site);
+        foreach ($siteConfig->startPoints() as $url) {
+            if (!$this->urlService->checkExist($url, $site)) {
+                $this->urlService->save($url, $site);
+                pinfo("Saved", $url);
+                pdash();
+            }
+        }
 
-        $this->init(
-            $site,
-            $siteConfig->startPoints()
-        );
+        pinfo("Crawling", $site->site);
+        pinfo("Crawled", "{$site->crawled} / {$site->urls}");
+        pinfo("Has data", $site->has_data ?: "0");
+        pdash();
 
         while ($this->urlService->hasPendingRecords($site)) {
             $pendingRecord    = $this->urlService->getPendingRecord($site);
@@ -41,11 +48,11 @@ class CrawlerService
 
                 if ($siteConfig->canBeStored($pendingRecordUrl)) {
                     $data = $siteConfig->getData($domCrawler);
-                    $this->urlService->updateData($pendingRecord, $data);
+                    $this->urlService->updateData($pendingRecord, $data, $site);
                     pinfo("Has data", $data['title']);
                 }
 
-                $domCrawler->filter('a')->each(function (DomCrawler $node, $i) use ($siteConfig, $site) {
+                $domCrawler->filter('a')->each(function (DomCrawler $node) use ($siteConfig, $site) {
                     $retrivedUrl = $siteConfig->formatUrl($node->attr('href') ?: "");
                     if ($siteConfig->isValidUrl($retrivedUrl)) {
                         if (!$this->urlService->checkExist($retrivedUrl, $site)) {
@@ -60,7 +67,7 @@ class CrawlerService
                 logger()->error($ex->getMessage());
             }
 
-            $this->urlService->updateStatus($pendingRecord, 1);
+            $this->urlService->updateStatus($pendingRecord, 1, $site);
             pdash();
         };
     }
@@ -69,18 +76,5 @@ class CrawlerService
     {
         $this->browser = $browser;
         return $this;
-    }
-
-    public function init(string $site, array $startPoints)
-    {
-        pinfo("Saving Start Point", $site);
-        foreach ($startPoints as $url) {
-            if (!$this->urlService->checkExist($url, $site)) {
-                $this->urlService->save($url, $site);
-                pinfo("Saved", $url);
-            } else {
-                pinfo("Existed", $url);
-            }
-        }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CrawlUrl extends Model
 {
@@ -14,5 +15,11 @@ class CrawlUrl extends Model
         "url",
         "url_hash",
         "data",
+        "visited",
     ];
+
+    function site(): BelongsTo
+    {
+        return $this->belongsTo(Site::class, 'site');
+    }
 }
