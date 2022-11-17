@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('site')->references('id')->on('sites')->onDelete('cascade');
             $table->text('url');
             $table->string('url_hash')->index();
-            $table->json('data')->nullable();
+            $table->string('data_file')->nullable();
             $table->integer('visited')->default(-1)->index(); // INIT:-1, VISITING: 0, VISTIED: 1
             $table->timestamps();
         });

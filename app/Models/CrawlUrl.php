@@ -14,7 +14,7 @@ class CrawlUrl extends Model
         "site",
         "url",
         "url_hash",
-        "data",
+        "data_file",
         "visited",
     ];
 
