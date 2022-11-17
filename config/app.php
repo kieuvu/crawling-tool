@@ -14,6 +14,7 @@ return [
     | any other location as required by the application or its packages.
     |
     */
+    'crawl_storage' => env("CRAWL_STORAGE", "crawl_data"),
 
     'name' => env('APP_NAME', 'Laravel'),
 
