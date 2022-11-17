@@ -36,10 +36,17 @@ return [
             'throw' => false,
         ],
 
+        'crawl_data' => [
+            'driver' => 'local',
+            'root' => storage_path('app/public/crawl_data'),
+            'url' => env('APP_URL') . '/storage',
+            'visibility' => 'public',
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => env('APP_URL').'/storage',
+            'url' => env('APP_URL') . '/storage',
             'visibility' => 'public',
             'throw' => false,
         ],
