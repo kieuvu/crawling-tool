@@ -46,7 +46,8 @@ class DienMayXanh extends SiteAbstract
     {
         $data = [];
 
-        $data['title'] = $crawler->filter('.titlebigKMDMX > h1')->text();
+        $data['title']   = $crawler->filter('.titlebigKMDMX > h1')->text();
+        $data['content'] = $crawler->filter('.boldh2ofcontentnews')->text();
 
         return $data;
     }
