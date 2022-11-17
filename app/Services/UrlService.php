@@ -7,8 +7,10 @@ use App\Models\Site;
 
 class UrlService
 {
-    public function __construct(private SiteService $siteService)
-    {
+    public function __construct(
+        private SiteService $siteService,
+        private StorageService $storageService
+    ) {
     }
 
     public function checkExist(string $url, Site $site): bool
@@ -42,17 +44,20 @@ class UrlService
         ]);
     }
 
-    public function updateData(CrawlUrl $record, $data, Site $site): bool
+    public function updateData(CrawlUrl $record, $data, Site $site): CrawlUrl
     {
+        $dataFile = $this->storageService->createDataFile($record, $data);
+        $record->data_file = $dataFile;
+        $record->save();
         $this->siteService->updateDataCount($site);
-        $record->data = json_encode($data);
-        return $record->save();
+        return $record;
     }
 
-    public function updateStatus(CrawlUrl $record, int $status, Site $site)
+    public function updateStatus(CrawlUrl $record, int $status, Site $site): CrawlUrl
     {
-        $this->siteService->updatedCrawledCount($site);
         $record->visited = $status;
-        return $record->save();
+        $record->save();
+        $this->siteService->updatedCrawledCount($site);
+        return $record;
     }
 }
