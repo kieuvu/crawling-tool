@@ -56,11 +56,11 @@ class CrawlerService
                     pinfo("Has data", $data['title']);
                 }
 
-                $domCrawler->filter('a')->each(function (DomCrawler $node) use ($siteConfig, $site) {
+                $domCrawler->filter('a')->each(function (DomCrawler $node) use ($siteConfig, $site, $pendingRecordUrl) {
                     $retrivedUrl = $siteConfig->formatUrl($node->attr('href') ?: "");
                     if ($siteConfig->isValidUrl($retrivedUrl)) {
                         if (!$this->urlService->checkExist($retrivedUrl, $site)) {
-                            $this->urlService->save($retrivedUrl, $site);
+                            $this->urlService->save($retrivedUrl, $site, $pendingRecordUrl);
                             pinfo("Saved", $retrivedUrl);
                         }
                         return true;

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\CrawlUrl;
 use App\Models\Site;
+use Symfony\Component\DomCrawler\Crawler;
 
 class UrlService
 {
@@ -34,13 +35,14 @@ class UrlService
             ->first();
     }
 
-    public function save(string $url, Site $site): CrawlUrl
+    public function save(string $url, Site $site, string $parentSite = null): CrawlUrl
     {
         $this->siteService->updateUrlCount($site);
         return CrawlUrl::create([
             'site'     => $site->id,
             'url'      => $url,
             'url_hash' => md5($url),
+            'parent_site' => $parentSite
         ]);
     }
 

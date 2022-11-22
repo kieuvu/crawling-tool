@@ -15,6 +15,7 @@ class CrawlUrl extends Model
         "url_hash",
         "data_file",
         "visited",
+        'parent_site',
     ];
 
     function site()
