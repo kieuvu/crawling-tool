@@ -28,10 +28,12 @@ class CrawlerService
             }
         }
 
-        pinfo("Crawling", $site->site);
-        pinfo("Crawled", "{$site->crawled} / {$site->urls}");
-        pinfo("Has data", $site->has_data ?: "0");
-        pdash();
+        (function () use ($site) {
+            pinfo("Crawling", $site->site);
+            pinfo("Crawled", "{$site->crawled} / {$site->urls}");
+            pinfo("Has data", $site->has_data ?: "0");
+            pdash();
+        })();
 
         while ($this->urlService->hasPendingRecords($site)) {
             $pendingRecord    = $this->urlService->getPendingRecord($site);
@@ -40,13 +42,15 @@ class CrawlerService
             try {
                 pinfo("Current Target", $pendingRecordUrl);
 
-                $html = $this->browser
-                    ->setSite($pendingRecordUrl)
-                    ->getSiteContent();
+                $this->browser->setSite($pendingRecordUrl);
+
+                $html = $this->browser->getSiteContent();
 
                 $domCrawler = new DomCrawler($html);
 
-                if ($siteConfig->canBeStored($pendingRecordUrl)) {
+                $siteConfig->getSpecialData($this->browser, $domCrawler, $pendingRecordUrl, $site);
+
+                if ($siteConfig->canBeStored($pendingRecordUrl) && is_null($pendingRecord->data_file)) {
                     $data = $siteConfig->getData($domCrawler);
                     $this->urlService->updateData($pendingRecord, $data, $site);
                     pinfo("Has data", $data['title']);
@@ -63,11 +67,12 @@ class CrawlerService
                     }
                     return false;
                 });
-            } catch (\Exception $ex) {
+
+                $this->urlService->updateStatus($pendingRecord, 1, $site);
+            } catch (\Throwable $ex) {
                 logger()->error($ex->getMessage());
             }
 
-            $this->urlService->updateStatus($pendingRecord, 1, $site);
             pdash();
         };
     }
