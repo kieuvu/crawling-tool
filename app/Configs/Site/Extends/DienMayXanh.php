@@ -20,7 +20,7 @@ class DienMayXanh extends SiteAbstract
     public function isValidUrl(string $url): bool
     {
         return preg_match("/^https:\/\/www\.dienmayxanh\.com\/khuyen\-mai/", $url) ||
-            preg_match("/^https:\/\/www\.dienmayxanh\.com\/khuyen\-mai\/\?p=[0-9]+/", $url);;
+            preg_match("/^https:\/\/www\.dienmayxanh\.com\/khuyen\-mai\/\?p=[0-9]+/", $url);
     }
 
     public function canBeStored(string $url): bool
@@ -46,8 +46,12 @@ class DienMayXanh extends SiteAbstract
     {
         $data = [];
 
-        $data['title']   = $crawler->filter('.titlebigKMDMX > h1')->text();
-        $data['content'] = $crawler->filter('.boldh2ofcontentnews')->text();
+        $data['title'] = $crawler->filter('.titlebigKMDMX > h1')->count() > 0
+            ? $crawler->filter('.titlebigKMDMX > h1')->text()
+            : null;
+        $data['content'] = $crawler->filter('.boldh2ofcontentnews')->count() > 0
+            ? $crawler->filter('.boldh2ofcontentnews')->text()
+            : null;
 
         return $data;
     }
