@@ -4,7 +4,7 @@ namespace App\Libs\Browser;
 
 abstract class BrowserAbstract implements BrowserInterface
 {
-    function __construct(protected string $url = "")
+    function __construct(protected string $url = "", protected int $timeout = 60)
     {
     }
 
@@ -17,5 +17,16 @@ abstract class BrowserAbstract implements BrowserInterface
     public function getSiteContent()
     {
         return "";
+    }
+
+    public function setTimeout($timeout)
+    {
+        $this->timeout = $timeout;
+        return $this;
+    }
+
+    public function getSite()
+    {
+        return $this->url;
     }
 }
