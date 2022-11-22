@@ -14,7 +14,7 @@ class CrawlCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'crawl {--site= : site}';
+    protected $signature = 'crawl {--site= : site} {--timeout= : timeout}';
 
     /**
      * The console command description.
@@ -36,9 +36,10 @@ class CrawlCommand extends Command
     public function handle()
     {
         $site = $this->option('site');
+        $timeout = $this->option('timeout') ?: 60;
 
         app(CrawlerService::class)
-            ->setBrowser(new BrowserShot())
-            ->run(SiteMapping::getSiteConfig($site));
+            ->setBrowser((new BrowserShot())->setTimeout($timeout))
+            ->run(SiteMapping::getSiteConfig($site), intval($timeout));
     }
 }
