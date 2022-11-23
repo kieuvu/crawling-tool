@@ -42,7 +42,9 @@ class CrawlerService
             try {
                 pinfo("Current Target", $pendingRecordUrl);
 
-                $this->browser->setSite($pendingRecordUrl);
+                $this->browser
+                    ->setSite($pendingRecordUrl)
+                    ->setConfig($siteConfig->otherConfigOption());
 
                 $html = $this->browser->getSiteContent();
 
