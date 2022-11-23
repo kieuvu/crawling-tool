@@ -35,4 +35,9 @@ abstract class SiteAbstract implements SiteInterface
     {
         return false;
     }
+
+    public function otherConfigOption()
+    {
+        return [];
+    }
 }

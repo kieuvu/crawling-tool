@@ -14,4 +14,5 @@ interface SiteInterface
     public function formatUrl(string $url): string;
     public function getData(DomCrawler $crawler): array;
     public function getSpecialData(BrowserInterface $browser, DomCrawler $domCrawler, $url, $site);
+    public function otherConfigOption();
 }
