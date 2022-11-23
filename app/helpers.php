@@ -1,6 +1,8 @@
 <?php
 
 use App\Libs\Console\BeautyEcho;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 
 if (!function_exists("pinfo")) {
     function pinfo($label, $message = "")
@@ -59,5 +61,14 @@ if (!function_exists("replaceParam")) {
         return extractUrlQueries($url, function (&$queriesArray) use ($newParam) {
             return array_replace($queriesArray, $newParam);
         });
+    }
+}
+
+if (!function_exists("randomUserAgent")) {
+    function randomUserAgent()
+    {
+        $file = File::get("database/data/useragents.json");
+        $data = json_decode($file, true);
+        return Arr::random($data);
     }
 }
