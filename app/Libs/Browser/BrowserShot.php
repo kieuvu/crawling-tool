@@ -8,7 +8,12 @@ class BrowserShot extends BrowserAbstract
 {
     public function getSiteContent()
     {
-        $config =  BS::url($this->url)
+        return $this->prepareBrowser()->bodyHtml();
+    }
+
+    private function prepareBrowser()
+    {
+        $config = BS::url($this->url)
             ->noSandbox()
             ->setNodeBinary('/usr/local/bin/node')
             ->setNpmBinary('/home/kieuvu/.npm-global/bin/npm')
@@ -31,7 +36,7 @@ class BrowserShot extends BrowserAbstract
             );
         }
 
-        return $config->bodyHtml();
+        return $config;
     }
 
     public function getClientBrowser()

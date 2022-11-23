@@ -274,8 +274,8 @@ class FortniteTrackergg extends SiteAbstract
         return [
             "waitForFunction" => [
                 "function" => "document.querySelector('.trn-site') != null",
-                "polling" => 500,
-                "timeout" => 20000
+                "polling" => 100,
+                "timeout" => 50000
             ],
             "timeout" => 960000,
             "randomUserAgent" => true,
