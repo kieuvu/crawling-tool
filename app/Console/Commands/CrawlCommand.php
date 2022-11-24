@@ -14,7 +14,7 @@ class CrawlCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'crawl {--site= : site}';
+    protected $signature = 'crawl {--site= : site} {--list= : list}';
 
     /**
      * The console command description.
@@ -36,9 +36,10 @@ class CrawlCommand extends Command
     public function handle()
     {
         $site = $this->option('site');
+        $list = explode(",", $this->option('list'));
 
         app(CrawlerService::class)
             ->setBrowser((new BrowserShot()))
-            ->run(SiteMapping::getSiteConfig($site));
+            ->run(SiteMapping::getSiteConfig($site)->setStartPoint($list));
     }
 }

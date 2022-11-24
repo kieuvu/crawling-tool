@@ -15,4 +15,5 @@ interface SiteInterface
     public function getData(DomCrawler $crawler): array;
     public function getSpecialData(BrowserInterface $browser, DomCrawler $domCrawler, $url, $site);
     public function otherConfigOption();
+    public function setStartPoint(array $startPoints);
 }

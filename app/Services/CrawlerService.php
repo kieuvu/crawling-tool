@@ -56,6 +56,7 @@ class CrawlerService
                     $data = $siteConfig->getData($domCrawler);
                     $this->urlService->updateData($pendingRecord, $data, $site);
                     pinfo("Has data", $data['title']);
+                    print_r($data);
                 }
 
                 $domCrawler->filter('a')->each(function (DomCrawler $node) use ($siteConfig, $site, $pendingRecordUrl) {
@@ -69,10 +70,11 @@ class CrawlerService
                     }
                     return false;
                 });
-
                 $this->urlService->updateStatus($pendingRecord, 1, $site);
             } catch (\Throwable $ex) {
+                $this->urlService->updateStatus($pendingRecord, -2, $site);
                 logger()->error($ex->getMessage());
+                pinfo("Failed");
             }
 
             pdash();

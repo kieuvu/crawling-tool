@@ -7,18 +7,18 @@ use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 abstract class SiteAbstract implements SiteInterface
 {
-    public function __construct()
+    public function __construct(protected array $listStartPoints = [])
     {
     }
 
     public function isValidUrl(string $url): bool
     {
-        return true;
+        return false;
     }
 
     public function canBeStored(string $url): bool
     {
-        return true;
+        return false;
     }
 
     public function formatUrl(string $url): string
@@ -39,5 +39,11 @@ abstract class SiteAbstract implements SiteInterface
     public function otherConfigOption()
     {
         return [];
+    }
+
+    public function setStartPoint(array $listStartPoints = [])
+    {
+        $this->listStartPoints = $listStartPoints;
+        return $this;
     }
 }
