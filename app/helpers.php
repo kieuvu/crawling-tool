@@ -72,3 +72,10 @@ if (!function_exists("randomUserAgent")) {
         return Arr::random($data);
     }
 }
+
+if (!function_exists("fileNameSanitizer")) {
+    function fileNameSanitizer(string $fileName)
+    {
+        return preg_replace('/[^a-zA-Z0-9_-]+/', '', $fileName);
+    }
+}
