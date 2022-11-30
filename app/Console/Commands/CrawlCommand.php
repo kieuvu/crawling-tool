@@ -38,8 +38,12 @@ class CrawlCommand extends Command
         $site = $this->option('site');
         $list = explode(",", $this->option('list'));
 
-        app(CrawlerService::class)
-            ->setBrowser((new BrowserShot()))
-            ->run(SiteMapping::getSiteConfig($site)->setStartPoint($list));
+        try {
+            app(CrawlerService::class)
+                ->setBrowser((new BrowserShot()))
+                ->run(SiteMapping::getSiteConfig($site)->setStartPoint($list));
+        } catch (\Throwable $ex) {
+            $this->error($ex->getMessage());
+        }
     }
 }

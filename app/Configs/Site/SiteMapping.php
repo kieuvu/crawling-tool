@@ -2,6 +2,7 @@
 
 namespace App\Configs\Site;
 
+use Exception;
 use Illuminate\Filesystem\Filesystem as File;
 
 class SiteMapping
@@ -29,8 +30,12 @@ class SiteMapping
 
     public static function getSiteConfig($site): SiteInterface
     {
-        return (array_key_exists($site, self::$alias))
-            ? app(self::getAllSites()[self::$alias[$site]])
-            : app(self::getAllSites()[$site]);
+        try {
+            return (array_key_exists($site, self::$alias))
+                ? app(self::getAllSites()[self::$alias[$site]])
+                : app(self::getAllSites()[$site]);
+        } catch (\Exception $ex) {
+            throw new Exception("Can't not find '$site'");
+        }
     }
 }
