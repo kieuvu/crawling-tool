@@ -7,10 +7,10 @@ use Illuminate\Filesystem\Filesystem as File;
 class SiteMapping
 {
     public static array $alias = [
-        "FortniteTrackergg" => "fortnite",
+        "fortnite" => "FortniteTrackergg",
     ];
 
-    public static function getAllSites()
+    public static function getAllSites(): array
     {
         $sites = [];
         $path = app_path();
@@ -21,11 +21,7 @@ class SiteMapping
             $fileName = str_replace(".php", "", $file->getFilename());
             $namespace = 'App\\Configs\\Site\\Extends' . '\\' . $fileName;
 
-            if (array_key_exists($fileName, self::$alias)) {
-                $sites[self::$alias[$fileName]] = $namespace;
-            } else {
-                $sites[$fileName] = $namespace;
-            }
+            $sites[$fileName] = $namespace;
         }
 
         return $sites;
@@ -33,6 +29,8 @@ class SiteMapping
 
     public static function getSiteConfig($site): SiteInterface
     {
-        return app(self::getAllSites()[$site]);
+        return (array_key_exists($site, self::$alias))
+            ? app(self::getAllSites()[self::$alias[$site]])
+            : app(self::getAllSites()[$site]);
     }
 }
