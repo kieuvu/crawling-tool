@@ -11,7 +11,7 @@ class SiteMapping
         "fortnite" => "FortniteTrackergg",
     ];
 
-    public static function getAllSites(): array
+    public static function getAllConfigFiles(): array
     {
         $sites = [];
         $path = app_path();
@@ -28,12 +28,20 @@ class SiteMapping
         return $sites;
     }
 
+    public static function show(): void
+    {
+        $alias = array_flip(self::$alias);
+        foreach (SiteMapping::getAllConfigFiles() as $key => $value) {
+            pinfo($key, $value) || (array_key_exists($key, $alias)) && pinfo($alias[$key], $value);
+        }
+    }
+
     public static function getSiteConfig($site): SiteInterface
     {
         try {
             return (array_key_exists($site, self::$alias))
-                ? app(self::getAllSites()[self::$alias[$site]])
-                : app(self::getAllSites()[$site]);
+                ? app(self::getAllConfigFiles()[self::$alias[$site]])
+                : app(self::getAllConfigFiles()[$site]);
         } catch (\Exception $ex) {
             throw new Exception("Can't not find '$site'");
         }

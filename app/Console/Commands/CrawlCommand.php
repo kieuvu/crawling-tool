@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Services\CrawlerService;
 use App\Configs\Site\SiteMapping;
 use App\Libs\Browser\BrowserShot;
+use App\Models\Site;
 
 class CrawlCommand extends Command
 {
@@ -44,6 +45,9 @@ class CrawlCommand extends Command
                 ->run(SiteMapping::getSiteConfig($site)->setStartPoint($list));
         } catch (\Throwable $ex) {
             $this->error($ex->getMessage());
+            $this->info("\nExisting :");
+            SiteMapping::show();
+            echo ("\n");
         }
     }
 }
