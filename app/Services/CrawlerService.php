@@ -23,16 +23,16 @@ class CrawlerService
         foreach ($siteConfig->startPoints() as $url) {
             if (!$this->urlService->checkExist($url, $site)) {
                 $this->urlService->save($url, $site);
-                pinfo("Saved", $url);
-                pdash();
+                p_info("Saved", $url);
+                p_dash();
             }
         }
 
         (function () use ($site) {
-            pinfo("Crawling", $site->site);
-            pinfo("Crawled", "{$site->crawled} / {$site->urls}");
-            pinfo("Has data", $site->has_data ?: "0");
-            pdash();
+            p_info("Crawling", $site->site);
+            p_info("Crawled", "{$site->crawled} / {$site->urls}");
+            p_info("Has data", $site->has_data ?: "0");
+            p_dash();
         })();
 
         while ($this->urlService->hasPendingRecords($site)) {
@@ -40,7 +40,7 @@ class CrawlerService
             $pendingRecordUrl = $pendingRecord->url;
 
             try {
-                pinfo("Current Target", $pendingRecordUrl);
+                p_info("Current Target", $pendingRecordUrl);
 
                 $this->browser
                     ->setSite($pendingRecordUrl)
@@ -55,16 +55,16 @@ class CrawlerService
                 if ($siteConfig->canBeStored($pendingRecordUrl) && is_null($pendingRecord->data_file)) {
                     $data = $siteConfig->getData($domCrawler);
                     $this->urlService->updateData($pendingRecord, $data, $site);
-                    pinfo("Has data", $data['title']);
+                    p_info("Has data", $data['title']);
                     print_r($data);
                 }
 
                 $domCrawler->filter('a')->each(function (DomCrawler $node) use ($siteConfig, $site, $pendingRecordUrl) {
-                    $retrivedUrl = $siteConfig->formatUrl($node->attr('href') ?: "");
-                    if ($siteConfig->isValidUrl($retrivedUrl)) {
-                        if (!$this->urlService->checkExist($retrivedUrl, $site)) {
-                            $this->urlService->save($retrivedUrl, $site, $pendingRecordUrl);
-                            pinfo("Saved", $retrivedUrl);
+                    $retrievedUrl = $siteConfig->formatUrl($node->attr('href') ?: "");
+                    if ($siteConfig->isValidUrl($retrievedUrl)) {
+                        if (!$this->urlService->checkExist($retrievedUrl, $site)) {
+                            $this->urlService->save($retrievedUrl, $site, $pendingRecordUrl);
+                            p_info("Saved", $retrievedUrl);
                         }
                         return true;
                     }
@@ -74,10 +74,10 @@ class CrawlerService
             } catch (\Throwable $ex) {
                 $this->urlService->updateStatus($pendingRecord, -2, $site);
                 logger()->error($ex->getMessage());
-                pinfo("Failed");
+                p_info("Failed");
             }
 
-            pdash();
+            p_dash();
         };
     }
 

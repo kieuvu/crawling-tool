@@ -4,16 +4,16 @@ use App\Libs\Console\BeautyEcho;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 
-if (!function_exists("pinfo")) {
-    function pinfo($label, $message = "")
+if (!function_exists("p_info")) {
+    function p_info($label, $message = "")
     {
         logger()->info($label, [$message]);
         BeautyEcho::Info($label, $message);
     }
 }
 
-if (!function_exists("pdash")) {
-    function pdash()
+if (!function_exists("p_dash")) {
+    function p_dash()
     {
         BeautyEcho::Dash(intval(exec('tput cols')));
     }

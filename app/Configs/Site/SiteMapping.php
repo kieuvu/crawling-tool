@@ -32,7 +32,7 @@ class SiteMapping
     {
         $alias = array_flip(self::$alias);
         foreach (SiteMapping::getAllConfigFiles() as $key => $value) {
-            pinfo($key, $value) || (array_key_exists($key, $alias)) && pinfo($alias[$key], $value);
+            p_info($key, $value) || (array_key_exists($key, $alias)) && p_info($alias[$key], $value);
         }
     }
 

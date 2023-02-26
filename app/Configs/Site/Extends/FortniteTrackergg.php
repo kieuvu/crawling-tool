@@ -258,13 +258,13 @@ class FortniteTrackergg extends SiteAbstract
             preg_match("/^https:\/\/fortnitetracker\.com\/leaderboards\/all\/Top1\?mode\=all\&page\=[0-9]+/", $browser->getSite()) ||
             preg_match("/^https:\/\/fortnitetracker.com\/leaderboards$/", $browser->getSite())
         ) {
-            pinfo("Getting special data", "...");
+            p_info("Getting special data", "...");
             if ($domCrawler->filter('#leaderboard > section > div > div.trn-card__content.pb0 > div.trn-pagination-wrapper > ul > li.trn-pagination__item.trn-pagination__item--active + li.trn-pagination__item')->count() > 0) {
                 $nextPage =  $domCrawler->filter('#leaderboard > section > div > div.trn-card__content.pb0 > div.trn-pagination-wrapper > ul > li.trn-pagination__item.trn-pagination__item--active + li.trn-pagination__item')->text();
                 $nextUrl = replaceParam($browser->getSite(), ["page" => $nextPage]);
                 !app(UrlService::class)->checkExist($nextUrl, $site) && app(UrlService::class)->save($nextUrl, $site, $browser->getSite());
-                pinfo("Saved", $nextUrl);
-                pinfo("Done", "...");
+                p_info("Saved", $nextUrl);
+                p_info("Done", "...");
             }
         }
     }
