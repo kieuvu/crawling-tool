@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Configs\Site\SiteInterface;
 use App\Libs\Browser\BrowserInterface;
+use App\Models\Site;
 use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class CrawlerService
@@ -28,12 +29,7 @@ class CrawlerService
             }
         }
 
-        (function () use ($site) {
-            p_info("Crawling", $site->site);
-            p_info("Crawled", "{$site->crawled} / {$site->urls}");
-            p_info("Has data", $site->has_data ?: "0");
-            p_dash();
-        })();
+        $this->getSiteInfo($site);
 
         while ($this->urlService->hasPendingRecords($site)) {
             $pendingRecord    = $this->urlService->getPendingRecord($site);
@@ -78,12 +74,20 @@ class CrawlerService
             }
 
             p_dash();
-        };
+        }
     }
 
     public function setBrowser(BrowserInterface $browser)
     {
         $this->browser = $browser;
         return $this;
+    }
+
+    public function getSiteInfo(Site $site)
+    {
+        p_info("Crawling", $site->site);
+        p_info("Crawled", "{$site->crawled} / {$site->urls}");
+        p_info("Has data", $site->has_data ?: "0");
+        p_dash();
     }
 }

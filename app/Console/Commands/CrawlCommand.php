@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 use App\Services\CrawlerService;
 use App\Configs\Site\SiteMapping;
 use App\Libs\Browser\BrowserShot;
-use App\Models\Site;
 
 class CrawlCommand extends Command
 {
@@ -22,18 +21,7 @@ class CrawlCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
         $site = $this->option('site');
@@ -47,7 +35,9 @@ class CrawlCommand extends Command
             $this->error($ex->getMessage());
             $this->info("\nExisting :");
             SiteMapping::show();
-            echo ("\n");
+            echo "\n";
         }
+
+        return true;
     }
 }
