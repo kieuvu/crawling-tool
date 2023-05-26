@@ -20,7 +20,7 @@ if (!function_exists("p_dash")) {
 }
 
 if (!function_exists("extractUrlQueries")) {
-    function extractUrlQueries($url,  $callback = null)
+    function extractUrlQueries($url, $callback = null)
     {
         [$urlString, $queryString] = array_pad(explode('?', $url), 2, '');
         parse_str($queryString, $queriesArray);
@@ -35,8 +35,9 @@ if (!function_exists("extractUrlQueries")) {
 
         $newQueryString = http_build_query($newQueriesArray);
 
-        if (strlen($newQueryString) == 0)
+        if (strlen($newQueryString) == 0) {
             return $urlString;
+        }
 
         return $urlString . '?' . $newQueryString;
     }
@@ -49,6 +50,7 @@ if (!function_exists("withoutUrlQueries")) {
             array_walk($blackLists, function ($v) use (&$queriesArray) {
                 unset($queriesArray[$v]);
             });
+
             return $queriesArray;
         });
     }

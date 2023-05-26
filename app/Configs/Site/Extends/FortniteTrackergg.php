@@ -33,7 +33,8 @@ class FortniteTrackergg extends SiteAbstract
     public function isValidUrl(string $url): bool
     {
         return
-            preg_match("/^https:\/\/fortnitetracker\.com\/leaderboards\/all\/Top1\?mode\=all\&page\=[0-9]+/", $url) || $this->canBeStored($url);
+            preg_match("/^https:\/\/fortnitetracker\.com\/leaderboards\/all\/Top1\?mode\=all\&page\=[0-9]+/", $url)
+            || $this->canBeStored($url);
     }
 
     public function canBeStored(string $url): bool
@@ -255,8 +256,8 @@ class FortniteTrackergg extends SiteAbstract
     public function getSpecialData(BrowserInterface $browser, DomCrawler $domCrawler, $url, $site)
     {
         if (
-            preg_match("/^https:\/\/fortnitetracker\.com\/leaderboards\/all\/Top1\?mode\=all\&page\=[0-9]+/", $browser->getSite()) ||
-            preg_match("/^https:\/\/fortnitetracker.com\/leaderboards$/", $browser->getSite())
+            preg_match("/^https:\/\/fortnitetracker\.com\/leaderboards\/all\/Top1\?mode\=all\&page\=[0-9]+/", $browser->getSite())
+            || preg_match("/^https:\/\/fortnitetracker.com\/leaderboards$/", $browser->getSite())
         ) {
             p_info("Getting special data", "...");
             if ($domCrawler->filter('#leaderboard > section > div > div.trn-card__content.pb0 > div.trn-pagination-wrapper > ul > li.trn-pagination__item.trn-pagination__item--active + li.trn-pagination__item')->count() > 0) {
