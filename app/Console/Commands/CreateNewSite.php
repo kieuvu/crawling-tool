@@ -2,75 +2,34 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Filesystem\Filesystem;
-
 use Illuminate\Console\Command;
 
 class CreateNewSite extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'crawl:file {--file= : file}';
+    protected $signature = 'crawl-make:file {fileName}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
-
-    public function __construct(protected Filesystem $files)
-    {
-        parent::__construct();
-    }
-
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
     public function handle()
     {
-        $path = app_path();
+        $fileName = $this->argument('fileName');
+        $stub     = str_replace('{{fileName}}', $fileName, $this->getConfigFileStub());
+        $filePath = $this->getConfigFilePath($fileName);
 
-        $fileName = fileNameSanitizer($this->option('file'));
-        $fileExtension = "php";
-        $filePath = "{$path}/Configs/Site/Extends/{$fileName}.{$fileExtension}";
-
-        if ($fileName === '' || is_null($fileName) || empty($fileName)) {
-            return $this->error('File Name Invalid..!');
+        if (file_exists($filePath)) {
+            $this->error('Config file already exists!');
+            return;
         }
 
-        $fileContent = "<?php
-
-namespace App\Configs\Site\Extends;
-
-use App\Configs\Site\SiteAbstract;
-use Symfony\Component\DomCrawler\Crawler as DomCrawler;
-
-class {$fileName} extends SiteAbstract
-{
-    public function rootUrl(): string
-    {
-        return '';
+        file_put_contents($filePath, $stub);
+        $this->info('Config file created successfully!');
     }
 
-    public function startPoints(): array
+    private function getConfigFileStub()
     {
-        return [];
+        return file_get_contents(base_path('stubs/new-site.stub'));
     }
-}";
 
-        if ($this->files->exists($filePath)) {
-            $this->error("{$fileName} Already exists!");
-        } else {
-            $this->files->put($filePath, $fileContent);
-            $this->info("{$fileName} generated!");
-        }
-
-        return 0;
+    private function getConfigFilePath($fileName)
+    {
+        return app_path("Configs/Site/Extends/{$fileName}.php");
     }
 }
