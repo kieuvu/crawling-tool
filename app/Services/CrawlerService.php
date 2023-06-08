@@ -19,7 +19,7 @@ class CrawlerService
 
     public function run(SiteInterface $siteConfig)
     {
-        $site =  $this->siteService->saveSite($siteConfig->rootUrl());
+        $site = $this->siteService->saveSite($siteConfig->rootUrl());
 
         foreach ($siteConfig->startPoints() as $url) {
             if (!$this->urlService->checkExist($url, $site)) {
@@ -57,15 +57,17 @@ class CrawlerService
 
                 $domCrawler->filter('a')->each(function (DomCrawler $node) use ($siteConfig, $site, $pendingRecordUrl) {
                     $retrievedUrl = $siteConfig->formatUrl($node->attr('href') ?: "");
-                    if ($siteConfig->isValidUrl($retrievedUrl)) {
-                        if (!$this->urlService->checkExist($retrievedUrl, $site)) {
-                            $this->urlService->save($retrievedUrl, $site, $pendingRecordUrl);
-                            p_info("Saved", $retrievedUrl);
-                        }
+                    if (
+                        $siteConfig->isValidUrl($retrievedUrl) &&
+                        !$this->urlService->checkExist($retrievedUrl, $site)
+                    ) {
+                        $this->urlService->save($retrievedUrl, $site, $pendingRecordUrl);
+                        p_info("Saved", $retrievedUrl);
                         return true;
                     }
                     return false;
                 });
+
                 $this->urlService->updateStatus($pendingRecord, 1, $site);
             } catch (\Throwable $ex) {
                 $this->urlService->updateStatus($pendingRecord, -2, $site);
