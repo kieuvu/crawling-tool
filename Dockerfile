@@ -19,9 +19,9 @@ RUN apt-get update && apt-get install -y \
   libssl-dev \
   sudo
 
-# RUN curl -sL https://deb.nodesource.com/setup_12.x -o /tmp/nodesource_setup.sh
-# RUN bash /tmp/nodesource_setup.sh
-# RUN apt-get install -y nodejs
+RUN curl -sL https://deb.nodesource.com/setup_19.x -o /tmp/nodesource_setup.sh
+RUN bash /tmp/nodesource_setup.sh
+RUN apt-get install -y nodejs
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
