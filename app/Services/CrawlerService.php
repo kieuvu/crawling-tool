@@ -9,11 +9,10 @@ use Symfony\Component\DomCrawler\Crawler as DomCrawler;
 
 class CrawlerService
 {
-    private BrowserInterface $browser;
-
     public function __construct(
         private UrlService $urlService,
-        private SiteService $siteService
+        private SiteService $siteService,
+        private BrowserInterface $browser
     ) {
     }
 
@@ -79,13 +78,7 @@ class CrawlerService
         }
     }
 
-    public function setBrowser(BrowserInterface $browser)
-    {
-        $this->browser = $browser;
-        return $this;
-    }
-
-    public function getSiteInfo(Site $site)
+    private function getSiteInfo(Site $site)
     {
         p_info("Crawling", $site->site);
         p_info("Crawled", "{$site->crawled} / {$site->urls}");

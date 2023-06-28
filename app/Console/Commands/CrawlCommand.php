@@ -3,9 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Services\CrawlerService;
 use App\Configs\Site\SiteMapping;
-use App\Libs\Browser\BrowserShot;
+use App\Facades\Vukm;
 
 class CrawlCommand extends Command
 {
@@ -28,12 +27,13 @@ class CrawlCommand extends Command
         $list = explode(",", $this->option('list'));
 
         try {
-            app(CrawlerService::class)
-                ->setBrowser((new BrowserShot()))
-                ->run(SiteMapping::getSiteConfig($site)->setStartPoint($list));
+            Vukm::run(
+                SiteMapping::getSiteConfig($site)
+                    ->setStartPoint($list)
+            );
         } catch (\Throwable $ex) {
             $this->error($ex->getMessage());
-            $this->info("\nExisting :");
+            $this->info("\nExisting:");
             SiteMapping::show();
             echo "\n";
         }
