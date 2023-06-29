@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Configs\Site\SiteMapping;
-use App\Facades\Vukm;
 
 class CrawlCommand extends Command
 {
@@ -27,7 +26,7 @@ class CrawlCommand extends Command
         $list = explode(",", $this->option('list'));
 
         try {
-            Vukm::run(
+            \Vukm::run(
                 SiteMapping::getSiteConfig($site)
                     ->setStartPoint($list)
             );
